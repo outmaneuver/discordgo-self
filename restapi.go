@@ -1652,14 +1652,29 @@ func (s *Session) ChannelMessage(channelID, messageID string, options ...Request
 	return
 }
 
-// ChannelMessageSend sends a message to the given channel.
-// channelID : The ID of a Channel.
-// content   : The message to send.
-func (s *Session) ChannelMessageSend(channelID string, content string, options ...RequestOption) (*Message, error) {
-	return s.ChannelMessageSendComplex(channelID, &MessageSend{
+// ChannelMessageSend sends a message to the given channel with optional delete after a specified number of seconds.
+// channelID   : The ID of a Channel.
+// content     : The message to send.
+// deleteAfter : Number of seconds after which the message should be deleted. If zero, the message won't be deleted.
+func (s *Session) ChannelMessageSend(channelID string, content string, deleteAfter int, options ...RequestOption) (*Message, error) {
+	message, err := s.ChannelMessageSendComplex(channelID, &MessageSend{
 		Content: content,
 	}, options...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if deleteAfter > 0 {
+		go func() {
+			time.Sleep(time.Duration(deleteAfter) * time.Second)
+			s.ChannelMessageDelete(channelID, message.ID)
+		}()
+	}
+
+	return message, nil
 }
+
 
 var quoteEscaper = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")
 
