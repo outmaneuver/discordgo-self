@@ -1655,8 +1655,8 @@ func (s *Session) ChannelMessage(channelID, messageID string, options ...Request
 // ChannelMessageSend sends a message to the given channel with optional delete after a specified number of seconds.
 // channelID   : The ID of a Channel.
 // content     : The message to send.
-// deleteAfter : Number of seconds after which the message should be deleted. If zero, the message won't be deleted.
-func (s *Session) ChannelMessageSend(channelID string, content string, deleteAfter int, options ...RequestOption) (*Message, error) {
+// deleteAfter : Optional number of seconds after which the message should be deleted. If not provided or zero, the message won't be deleted.
+func (s *Session) ChannelMessageSend(channelID string, content string, options ...RequestOption, deleteAfter ...int) (*Message, error) {
 	message, err := s.ChannelMessageSendComplex(channelID, &MessageSend{
 		Content: content,
 	}, options...)
@@ -1665,9 +1665,15 @@ func (s *Session) ChannelMessageSend(channelID string, content string, deleteAft
 		return nil, err
 	}
 
-	if deleteAfter > 0 {
+	// If deleteAfter is provided, use the first value, otherwise default to 0
+	deleteSeconds := 0
+	if len(deleteAfter) > 0 {
+		deleteSeconds = deleteAfter[0]
+	}
+
+	if deleteSeconds > 0 {
 		go func() {
-			time.Sleep(time.Duration(deleteAfter) * time.Second)
+			time.Sleep(time.Duration(deleteSeconds) * time.Second)
 			s.ChannelMessageDelete(channelID, message.ID)
 		}()
 	}
