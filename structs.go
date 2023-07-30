@@ -2045,7 +2045,6 @@ type Identify struct {
 	LargeThreshold int                 `json:"large_threshold"`
 	Shard          *[2]int             `json:"shard,omitempty"`
 	Presence       GatewayStatusUpdate `json:"presence,omitempty"`
-	Intents        Intent              `json:"intents"`
 }
 
 // IdentifyProperties contains the "properties" portion of an Identify packet
