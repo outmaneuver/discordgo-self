@@ -28,7 +28,6 @@ var (
 	EndpointGuilds         = EndpointAPI + "guilds/"
 	EndpointChannels       = EndpointAPI + "channels/"
 	EndpointUsers          = EndpointAPI + "users/"
-	EndpointRelationships  = EndpointAPI + "relationships"
 	EndpointGateway        = EndpointAPI + "gateway"
 	EndpointGatewayBot     = EndpointGateway + "/bot"
 	EndpointWebhooks       = EndpointAPI + "webhooks/"
@@ -49,6 +48,7 @@ var (
 
 	EndpointUser               = func(uID string) string { return EndpointUsers + uID }
 	EndpointUserAvatar         = func(uID, aID string) string { return EndpointCDNAvatars + uID + "/" + aID + ".png" }
+	EndpointUserRelationships  = func(uID string) string { return EndpointUsers + uID + "/relationships" }
 	EndpointUserAvatarAnimated = func(uID, aID string) string { return EndpointCDNAvatars + uID + "/" + aID + ".gif" }
 	EndpointDefaultUserAvatar  = func(idx int) string {
 		return EndpointCDN + "embed/avatars/" + strconv.Itoa(idx) + ".png"
