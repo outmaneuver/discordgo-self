@@ -337,9 +337,9 @@ func (s *Session) User(userID string, options ...RequestOption) (st *User, err e
 
 // Relationship returns the relationship details of the given userID
 // userID    : A user ID or "@me" which is a shortcut of current user ID
-func (s *Session) Relationship(userID string, options ...RequestOption) (st *User, err error) {
+func (s *Session) Relationship(userID string, options ...RequestOption) (st *Relationship, err error) {
 
-	body, err := s.RequestWithBucketID("GET", EndpointUserRelationships(userID), nil, EndpointUserRelationships, options...)
+	body, err := s.RequestWithBucketID("GET", EndpointUserRelationships(userID), nil, EndpointUserRelationships(userID), options...)
 	if err != nil {
 		return
 	}
@@ -347,6 +347,7 @@ func (s *Session) Relationship(userID string, options ...RequestOption) (st *Use
 	err = unmarshal(body, &st)
 	return
 }
+
 
 
 // UserAvatar is deprecated. Please use UserAvatarDecode
