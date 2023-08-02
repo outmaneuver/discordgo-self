@@ -339,7 +339,7 @@ func (s *Session) User(userID string, options ...RequestOption) (st *User, err e
 // userID    : A user ID or "@me" which is a shortcut of current user ID
 func (s *Session) Relationship(userID string, options ...RequestOption) (st *Relationship, err error) {
 
-	body, err := s.RequestWithBucketID("GET", EndpointRelationship(userID), nil, EndpointRelationships, options...)
+	body, err := s.RequestWithBucketID("GET", EndpointUserRelationships(userID), nil, EndpointUserRelationships, options...)
 	if err != nil {
 		return
 	}
