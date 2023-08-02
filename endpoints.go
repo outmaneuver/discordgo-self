@@ -28,6 +28,7 @@ var (
 	EndpointGuilds         = EndpointAPI + "guilds/"
 	EndpointChannels       = EndpointAPI + "channels/"
 	EndpointUsers          = EndpointAPI + "users/"
+	EndpointRelationships  = EndpointAPI + "relationships"
 	EndpointGateway        = EndpointAPI + "gateway"
 	EndpointGatewayBot     = EndpointGateway + "/bot"
 	EndpointWebhooks       = EndpointAPI + "webhooks/"
