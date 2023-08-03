@@ -335,16 +335,82 @@ func (s *Session) User(userID string, options ...RequestOption) (st *User, err e
 }
 
 
-// Relationship returns the relationship details of the given userID
-// userID    : A user ID or "@me" which is a shortcut of current user ID
-func (s *Session) Relationship(userID string, options ...RequestOption) (st *User, err error) {
-
-	body, err := s.RequestWithBucketID("GET", EndpointUserRelationships(userID), nil, EndpointUserRelationships(userID), options...)
+func (s *Session) UserRelationships() (st []*Relationship, err error) {
+	body, err := s.RequestWithBucketID("GET", EndpointUserRelationships("@me"), nil, EndpointUserRelationships(""))
 	if err != nil {
 		return
 	}
 
 	err = unmarshal(body, &st)
+	return
+}
+
+
+func (s *Session) UserRelationshipDelete(userID string) (err error) {
+	_, err = s.RequestWithBucketID("DELETE", EndpointUserRelationship(userID), nil, EndpointUserRelationships(""), map[string]string{
+		"x-context-properties": "eyJsb2NhdGlvbiI6IkNvbnRleHRNZW51In0=",
+	})
+	return
+}
+
+
+func (s *Session) UserRelationshipCreate(userID string, relType int) (err error) {
+	data := map[string]int{}
+
+	if relType != 1 {
+		data["type"] = relType
+	}
+
+	_, err = s.RequestWithBucketID("PUT", EndpointUserRelationship(userID), data, EndpointUserRelationships(""), map[string]string{
+		"x-context-properties": "eyJsb2NhdGlvbiI6IkNvbnRleHRNZW51In0=",
+	})
+	return
+}
+
+
+func (s *Session) UserSendFriendRequest(username string, discriminator int) (err error) {
+	data := map[string]any{
+		"username":      username,
+		"discriminator": nil,
+	}
+
+	if discriminator != 0 {
+		data["discriminator"] = discriminator
+	}
+
+	_, err = s.RequestWithBucketID("POST", EndpointUserRelationships("@me"), data, EndpointUserRelationships(""), map[string]string{
+		"x-context-properties": "eyJsb2NhdGlvbiI6IkFkZCBGcmllbmQifQ==",
+	})
+	return
+}
+
+
+func (s *Session) UserMutualFriends(userID string) (users []*User, err error) {
+	response, err := s.RequestWithBucketID("GET", EndpointUserRelationships(userID), nil, EndpointUserConnections(""))
+	if err != nil {
+		return nil, err
+	}
+
+	err = unmarshal(response, &users)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+
+func (s *Session) UserProfile(userID string) (st *Profile, err error) {
+	response, err := s.RequestWithBucketID("GET", EndpointUserProfile(userID)+"?with_mutual_guilds=true", nil, EndpointUserProfile(""))
+	if err != nil {
+		return nil, err
+	}
+
+	err = unmarshal(response, &st)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
