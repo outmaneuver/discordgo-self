@@ -345,14 +345,12 @@ func (s *Session) UserRelationships() (st []*Relationship, err error) {
 	return
 }
 
-
 func (s *Session) UserRelationshipDelete(userID string) (err error) {
 	_, err = s.RequestWithBucketID("DELETE", EndpointUserRelationship(userID), nil, EndpointUserRelationships(""), map[string]string{
 		"x-context-properties": "eyJsb2NhdGlvbiI6IkNvbnRleHRNZW51In0=",
 	})
 	return
 }
-
 
 func (s *Session) UserRelationshipCreate(userID string, relType int) (err error) {
 	data := map[string]int{}
@@ -367,7 +365,6 @@ func (s *Session) UserRelationshipCreate(userID string, relType int) (err error)
 	return
 }
 
-
 func (s *Session) UserSendFriendRequest(username string, discriminator int) (err error) {
 	data := map[string]any{
 		"username":      username,
@@ -381,36 +378,6 @@ func (s *Session) UserSendFriendRequest(username string, discriminator int) (err
 	_, err = s.RequestWithBucketID("POST", EndpointUserRelationships("@me"), data, EndpointUserRelationships(""), map[string]string{
 		"x-context-properties": "eyJsb2NhdGlvbiI6IkFkZCBGcmllbmQifQ==",
 	})
-	return
-}
-
-
-func (s *Session) UserMutualFriends(userID string) (users []*User, err error) {
-	response, err := s.RequestWithBucketID("GET", EndpointUserRelationships(userID), nil, EndpointUserConnections(""))
-	if err != nil {
-		return nil, err
-	}
-
-	err = unmarshal(response, &users)
-	if err != nil {
-		return
-	}
-
-	return
-}
-
-
-func (s *Session) UserProfile(userID string) (st *Profile, err error) {
-	response, err := s.RequestWithBucketID("GET", EndpointUserProfile(userID)+"?with_mutual_guilds=true", nil, EndpointUserProfile(""))
-	if err != nil {
-		return nil, err
-	}
-
-	err = unmarshal(response, &st)
-	if err != nil {
-		return
-	}
-
 	return
 }
 
