@@ -48,7 +48,6 @@ var (
 
 	EndpointUser               = func(uID string) string { return EndpointUsers + uID }
 	EndpointUserAvatar         = func(uID, aID string) string { return EndpointCDNAvatars + uID + "/" + aID + ".png" }
-	EndpointUserRelationships  = func(uID string) string { return EndpointUsers + uID + "/relationships" }
 	EndpointUserAvatarAnimated = func(uID, aID string) string { return EndpointCDNAvatars + uID + "/" + aID + ".gif" }
 	EndpointDefaultUserAvatar  = func(idx int) string {
 		return EndpointCDN + "embed/avatars/" + strconv.Itoa(idx) + ".png"
@@ -66,6 +65,8 @@ var (
 	EndpointUserChannels                  = func(uID string) string { return EndpointUsers + uID + "/channels" }
 	EndpointUserApplicationRoleConnection = func(aID string) string { return EndpointUsers + "@me/applications/" + aID + "/role-connection" }
 	EndpointUserConnections               = func(uID string) string { return EndpointUsers + uID + "/connections" }
+	EndpointUserRelationships             = func(uID string) string { return EndpointUsers + uID + "/relationships" }
+	EndpointUserRelationship              = func(uID string) string { return EndpointUserRelationships("@me") + "/" + uID }
 
 	EndpointGuild                    = func(gID string) string { return EndpointGuilds + gID }
 	EndpointGuildAutoModeration      = func(gID string) string { return EndpointGuild(gID) + "/auto-moderation" }
