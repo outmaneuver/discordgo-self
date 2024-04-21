@@ -1,4 +1,4 @@
-module github.com/3nginius/discordgo-self
+module github.com/outmaneuver/discordgo-self
 
 go 1.13
 
