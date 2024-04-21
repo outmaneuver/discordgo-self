@@ -297,8 +297,10 @@ func (v *VoiceConnection) open() (err error) {
 		if i > 20 { // only loop for up to 1 second total
 			return fmt.Errorf("did not receive voice Session ID in time")
 		}
+		v.Unlock()
 		time.Sleep(50 * time.Millisecond)
 		i++
+		v.Lock()
 	}
 
 	// Connect to VoiceConnection Websocket
